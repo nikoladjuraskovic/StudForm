@@ -1,0 +1,7 @@
+C:\Users\Nikola\source\repos\ASPvezbeForma\obj\Release\net6.0\PubTmp\Out\ASPvezbeForma.exe
+C:\Users\Nikola\source\repos\ASPvezbeForma\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
+C:\Users\Nikola\source\repos\ASPvezbeForma\obj\Release\net6.0\PubTmp\Out\appsettings.json
+C:\Users\Nikola\source\repos\ASPvezbeForma\obj\Release\net6.0\PubTmp\Out\ASPvezbeForma.dll
+C:\Users\Nikola\source\repos\ASPvezbeForma\obj\Release\net6.0\PubTmp\Out\ASPvezbeForma.deps.json
+C:\Users\Nikola\source\repos\ASPvezbeForma\obj\Release\net6.0\PubTmp\Out\ASPvezbeForma.runtimeconfig.json
+C:\Users\Nikola\source\repos\ASPvezbeForma\obj\Release\net6.0\PubTmp\Out\ASPvezbeForma.pdb

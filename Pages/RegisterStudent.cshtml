@@ -1,0 +1,196 @@
+﻿@page
+@model ASPvezbeForma.Pages.RegisterStudentModel
+<style type="text/css">
+    
+    #greska {
+            color: red;
+            font-size: 14px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+
+</style>
+<!--forma za registraciju studenta-->
+<!--link za ovu stranicu kojoj se pristupa iz homepage-a(index) je u Layout u nav bar listi,
+    gde su i linkovi ka ostalim stranicama. Citava ideja je da imamo lepo stilizovanu formu
+    pomocu CSS-a i Bootstrap-a kojom unosimo podatke o studentima, tj. registrujemo
+    studenta. Nakon validacija na strani klijenta, tj. da li su podaci koji se unose uneti i u
+    tacnom formatu, onda te podatke cuvamo u nekoj nasoj "bazi". Zapravo ne u bazi,
+    nego u nekoj strukturi podataka na SERVERU(lista, povezana lista, recnik, niz, ...)
+    Nakon toga, na konzoli ispisujem podatke o unetom studentu. Veb aplikacija mora
+    da radi tako da je stalno moguce dodavati nove studente.
+-->
+<form method = "post" action = "" id = "forma" style="width: 70%; margin: auto;">
+
+    <div id="greska"></div>
+
+
+        <fieldset class="form-group">
+            <legend>Registracija</legend>
+
+            <div class="form-group">
+                <label for="name">Ime*:</label>
+                <input id="name" class="form-control" type="text" 
+                name="name" maxlength="20">
+            </div>
+            
+            <div class="form-group">
+                <label for="index">Indeks*:</label>
+                <input id="index" class="form-control" name="index" 
+                type="text">
+            </div>
+
+            <div>
+                    <input name="vanredan" id="jeste_vanredan" value="jeste_vanredan" type="radio">
+                    <label for="jeste_vanredan">vanredan</label>
+                </div>
+
+                <div>
+                    <input name="vanredan" id="nije_vanredan" value="nije_vanredan" type="radio">
+                    <label for="nije_vanredan">nije vanredan</label>
+            </div>
+        </fieldset> 
+
+
+       <br />
+        
+        <div class="form-group text-center">
+            <input type="submit" value="Registruj se!" class="btn 
+            btn-outline-success btn-lg">
+            <input type="reset" value="Poništi unos!" class="btn 
+            btn-danger btn-sm">
+        </div>
+    </form>
+
+
+    <script>
+    //validacija(provera) unosa na strani KLIJENTA
+        let f = document.getElementById("forma");
+
+        const greska = document.getElementById("greska");
+
+        f.addEventListener("submit", function(ev){
+
+            let polje = document.getElementById("name");
+            let ime = polje.value.trim();
+            
+            //dovoljna je provera samo da li je korisnik uneo nesto
+            if(ime == "" || ime.length > 20)
+            {
+                //moze se u input staviti atribut required pri cemu nikada necemo
+                //uci u ovaj if uslov jer ce se HTML pobrinuti da se nesto unese
+                greska.textContent = 'Niste uneli ime!';
+                
+                polje.focus();
+                
+                ev.preventDefault();
+                
+                return false;
+            }
+
+
+            polje = document.getElementById("index");
+
+            let index = polje.value.trim();
+            
+            if(index == "" || index.length > 20)
+            {
+                
+                
+                greska.textContent = 'Niste uneli indeks!';
+                
+                polje.focus();
+                
+                ev.preventDefault();
+                
+                return false;
+            }
+
+            let indikatorVanrednosti = false;
+            polje = document.querySelectorAll('input[name="vanredan"]');
+
+            for (let i = 0; i < polje.length; ++i) {
+                let vanrednost = polje[i];
+
+                if (vanrednost.checked) {
+                    indikatorVanrednosti = true;
+                    break;
+                }
+            }
+
+            if (indikatorVanrednosti == false) {
+                
+                greska.textContent = 'Vanrednost je obavezno polje!';
+                ev.preventDefault();
+                return false;
+            }
+
+
+            
+
+            return true;
+
+
+        });
+
+    </script>
+
+
+
+@functions{
+
+    public class Student{
+
+        public string ime { get; set; }
+        public int indeks { get; set; }
+        public string vanredan { get; set; }
+
+        public Student(string ime, int indeks, string vanredan)
+        {
+            this.ime = ime;
+            this.indeks = indeks;
+            this.vanredan = vanredan;
+        }
+
+        public override string ToString()
+        {
+            return "Ja sam " + ime + " i indeks mi je " + indeks;
+        }
+    }
+
+  
+}
+
+@{
+    LinkedList<Student> studenti = new LinkedList<Student>();
+    
+    string ime;
+    int indeks;
+    string vanredan;
+    /*HTTP Metod za dohvatanje veb stranica je GET metod. Kada unesemo podatke
+     * u formu, zatim, kada kliknemo na dugme submit i kada prodje validacija na 
+     * strani klijenta metod postaje POST. Tada, treba izvrsiti serverski deo koda.
+     */
+    if(Request.Method == "POST")
+    { /*ako je metod post, tj. ako smo uspesno uneli podatke za studenta,
+        ucitaj ih iz forme i unesi u nasi povezanu listu(nasa struktura podataka)*/
+        ime = Request.Form["name"]; /* BITNO! podatke iz forme dohavatamo preko Form
+        svojstva Request objekta na osnovu name atributa iz input-a*/
+        indeks = Convert.ToInt32(Request.Form["index"]);
+        vanredan = Request.Form["vanredan"];
+
+        Student s = new Student(ime, indeks, vanredan);
+
+        if (studenti.Count == 0) // ako je lista prazna
+
+            studenti.AddFirst(s); // ubaci ga na prvo mesto
+        else
+            studenti.AddLast(s); // inace na poslednje mesto
+
+        Console.WriteLine("Uneo Studenta:");
+        Console.WriteLine("Ime: " + s.ime + " indeks: " + s.indeks + " vanredan: " + s.vanredan);
+
+        
+    }
+}
